@@ -96,5 +96,5 @@ app.get(`/products/:pid`, async (req, res) => {
 
 
 app.listen(PORT, () => {
-  console.log(`API RUNNING`);
+  console.log(`API RUNNING EN EL PORT: ${PORT}`);
 });
