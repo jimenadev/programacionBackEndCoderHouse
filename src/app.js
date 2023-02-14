@@ -1,98 +1,17 @@
-const { ProductManager } = require("./ProductManager");
-const path = require("path");
 const express = require("express");
+const productsRoutes = require("./routes/products");
+const cartsRoutes = require("./routes/carts");
 
-const PORT = 8500;
+const PORT = 8080;
+
 const app = express();
 
-app.use(express.json()); // transforme el body y lo podamos usar en req.body
-app.use(express.urlencoded({ extended: true })); // procesar req.body y los req.query
+const BASE_PREFIX = "api";
 
-
-
-
-app.get(`/products`, async (req, res) => {
-    const limit = req.query.limit;
-    
-    const directory = path.join(`${__dirname}/BD/products.json`);
-    const productManager = new ProductManager(directory);
-      try {
-        if (limit === undefined){
-          const listaProducts = await productManager.getProducts();
-
-          return res.status(200).json({
-            ok: true,
-            message: `lista de productos`,
-            listaProducts,
-          });
-    
-        }else{
-
-          if (isNaN(limit)) {
-            return res.status(400).json({
-              ok: true,
-              message: `limit debe ser un valor numérico ${limit}`,
-              queryParams: req.query,
-            });
-
-          }
-
-          const listaProducts = await productManager.getProductsLimit(limit);
-
-          return res.status(200).json({
-            ok: true,
-            message: `lista de productos`,
-            listaProducts,
-          });
-        }
-
-       
-        
-      } catch (error) {
-        return res.status(500).json({
-            ok: true,
-            message: `Error al procesar la información`,
-            queryParams: req.query,
-          });
-      }
-    
-    
-
-});
-
-app.get(`/products/:pid`, async (req, res) => {
-  const pid = req.params.pid;
-
-  if (isNaN(pid)) {
-    return res.status(400).json({
-      ok: false,
-      message: `El id es un valor inválido ${pid}`,
-    });
-  }
-
-  const directory = path.join(`${__dirname}/BD/products.json`);
-    const productManager = new ProductManager(directory);
-
-  try{
-    const id = Number(pid);
-
-    const product = await productManager.getProductById(id);
-
-    return res.status(200).json({
-        ok: true,
-        message: `Producto`,
-        product,
-    });
-
-  } catch (error) {
-        return res.status(500).json({
-            ok: false,
-            message: `Error al procesar la información`,
-          });
-      }
-  
-
-});
+app.use(express.json()); // transforme el body y lo podamos usar en req.body, sin esto no podemos ver el req.body
+app.use(express.urlencoded({ extended: true })); // procesar req.body y los req.query, sino se agrega no podremos tomar los parametros de la url del request, req.query
+app.use(`/${BASE_PREFIX}/products`, productsRoutes);
+app.use(`/${BASE_PREFIX}/carts`, cartsRoutes);
 
 
 app.listen(PORT, () => {
