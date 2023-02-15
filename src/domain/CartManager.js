@@ -1,5 +1,4 @@
 const fs = require("fs/promises");
-const {ProductMaanger} = require("ProductManager");
 
 class CartManager{
 
