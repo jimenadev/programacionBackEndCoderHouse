@@ -57,6 +57,7 @@ mdlProductInCart = (req,res,next) =>{
 
     const cid = req.params.cid;
     const pid = req.params.pid;
+    const { product } = req.body;
 
     let emptyCid = (cid === undefined | cid === null | cid === "") ? true: false;
     if(emptyCid){
@@ -87,6 +88,13 @@ mdlProductInCart = (req,res,next) =>{
           ok: false,
           message: `The pid is an invalid value (${pid})`,
         });
+    }
+
+    if(product !== Number(pid)){
+        return res.status(400).json({
+            ok: false,
+            message: `The pid is not equal id product (in body) (${pid})`,
+          });
     }
 
     next();

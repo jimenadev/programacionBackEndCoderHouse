@@ -70,7 +70,7 @@ class ProductManager{
         let p = this.products.products.find(product => product.id === id);
 
         if(!p){
-            return {status:400,ok:false, message:'Not found produt con id ${id}'};
+            return {status:400,ok:false, message:`Not found produt con id ${id}`};
         }
 
         return p;
@@ -83,13 +83,12 @@ class ProductManager{
     
             let editProduct =  await this.getProductById(id);
            
-            if(!editProduct){
-                return {status:400, ok:true, message:'The product is not register'};
+            if(editProduct.status === 400){
+                return editProduct;
             }
 
             this.products = await this.getProducts();
             
-    
             let emptyTitle = (title === undefined | title === null | title === "") ? true: false;
             if(!emptyTitle){
                 editProduct.title = title;
@@ -144,7 +143,7 @@ class ProductManager{
     
             await fs.writeFile(this.path, JSON.stringify(this.products));
 
-            return {status:200, ok:true, message:"The new product was updated"};
+            return {status:200, ok:true, message:"The product was updated"};
         } catch (error) {
             return {status:500, ok:false, message:`Internal server error ${error}`};
         }
@@ -155,8 +154,8 @@ class ProductManager{
 
             let Product = await this.getProductById(id);
 
-            if(Product === "Not found"){
-                return {status:400, ok:true, message:"the product not found"};
+            if(Product.status === 400){
+                return Product;
             }
 
             this.products = await this.getProducts();

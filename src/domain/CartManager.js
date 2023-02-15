@@ -36,13 +36,10 @@ class CartManager{
         try{
 
             this.carts = await this.getCarts();
-
-            console.log(this.carts);
-
             let c = this.carts.carts.find(cart => cart.id === cid);
 
             if(!c){
-                return {status:400,ok:false, message:`Not found the cart con id ${id}`};
+                return {status:400,ok:false, message:`Not found the cart con id ${cid}`};
             }
 
             return c;
@@ -56,6 +53,7 @@ class CartManager{
     addProductInCart = async (cid, pid, product) =>{
         try{
             let cart = await this.getCartById(cid);
+            let index = this.carts.carts.indexOf(cart);
 
             let productFound = await this.getProductInCart(cart, pid);
             
@@ -68,13 +66,9 @@ class CartManager{
             }
 
             this.carts = await this.getCarts();
+            this.carts.carts[index] = cart;
 
-            const newCarts = {"carts":[]};
-            newCarts.carts = this.carts.carts.filter((item) => item.id !== cid);
-
-            newCarts.carts.push(cart);
-
-            await fs.writeFile(this.path, JSON.stringify(newCarts));
+            await fs.writeFile(this.path, JSON.stringify(this.carts));
 
             return {status:200, ok:true, message:"The product was added in cart"};
         } catch (error) {
@@ -103,14 +97,13 @@ class CartManager{
 
         try {
             const listaCarts = await fs.readFile(this.path);
-
-            console.log(this.path);
             return JSON.parse(listaCarts);
         } catch (error) {
             return {status:500, ok:false, message:`Internal server error ${error}`};
         }
 
     }
+
     
 }
 

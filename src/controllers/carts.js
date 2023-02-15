@@ -28,14 +28,19 @@ getCartById = async (req, res) => {
   
       const cart = await cartManager.getCartById(cart_id);
 
-     
-  
+      if(cart.status === 400){
+          return res.status(cart.status).json({
+            ok: cart.ok,
+            message: cart.message,
+        });
+      }
+
       return res.status(200).json({
-          ok: true,
-          message: `Cart`,
-          cart,
+        ok: true,
+        message: "Cart",
+        cart
       });
-  
+
     } catch (error) {
           return res.status(500).json({
               ok: false,

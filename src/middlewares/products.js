@@ -152,10 +152,19 @@ mdlGetProductById = (req,res,next) =>{
 mdlUpdateProduct = (req,res,next) =>{
     const  pid  = req.params.pid;
 
+    let emptyId = (pid === undefined | pid === null | pid === "") ? true: false;
+    if(emptyId){
+        return res.status(400).json({
+            ok: false,
+            message: "properties id is required"
+          });
+    }
+
+
     if (isNaN(pid)) {
         return res.status(400).json({
           ok: false,
-          message: `The pid is an invalid value (${id})`,
+          message: `The pid is an invalid value (${pid})`,
         });
     }
 
