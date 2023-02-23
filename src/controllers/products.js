@@ -1,6 +1,28 @@
 const ProductManager = require("../domain/ProductManager");
 const path = require("path");
 
+getProductView = async(req, res) => {
+
+  const limit = req.query.limit;
+    
+    const directory = path.join(`${__dirname}/../BD/products.json`);
+    const productManager = new ProductManager.ProductManager(directory);
+
+    try {
+          const listaProducts = await productManager.getProducts();
+          res.render("index", { products: listaProducts.products });
+        
+      } catch (error) {
+        return res.status(500).json({
+            ok: true,
+            message: `Error processing the information`,
+            queryParams: req.query,
+          });
+      }
+
+}
+
+
 getProduct = async (req,res) =>{
 
     const limit = req.query.limit;
@@ -130,5 +152,6 @@ module.exports ={
     getProductById,
     postAddProduct,
     putUpdateProduct,
-    deleteProduct
+    deleteProduct,
+    getProductView
 }
