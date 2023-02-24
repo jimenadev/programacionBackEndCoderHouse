@@ -24,14 +24,4 @@ socket.on("products", (data) => {
   productos.innerHTML = messages;
 });
 
-socket.on("newUserConnected", (data) => {
-  if (!user) return;
-  Swal.fire({
-    title: `el ${data} ha iniciado sesion`,
-    toast: true,
-    position: "top-end",
-    showConfirmButton: false,
-    timer: 3000,
-    icon: "success",
-  });
-});
+
