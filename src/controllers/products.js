@@ -1,6 +1,23 @@
 const ProductManager = require("../domain/ProductManager");
 const path = require("path");
 
+
+getProductSocket = async() => {
+    
+  const directory = path.join(`${__dirname}/../BD/products.json`);
+  const productManager = new ProductManager.ProductManager(directory);
+
+  try {
+        const listaProducts = await productManager.getProducts();
+        return listaProducts;
+      
+    } catch (error) {
+     console.log(error);
+    }
+
+}
+
+
 getProductView = async(req, res) => {
 
   const limit = req.query.limit;
@@ -153,5 +170,6 @@ module.exports ={
     postAddProduct,
     putUpdateProduct,
     deleteProduct,
-    getProductView
+    getProductView,
+    getProductSocket
 }

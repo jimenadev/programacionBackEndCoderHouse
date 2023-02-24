@@ -4,6 +4,8 @@ const productsRoutes = require("./routes/products");
 const cartsRoutes = require("./routes/carts");
 const viewsRoutes = require("./routes/views");
 const path = require("path");
+const ProductControllers = require("./controllers/products");
+const { Server } = require("socket.io");
 
 const PORT = 8080;
 
@@ -27,7 +29,21 @@ app.use("/", viewsRoutes);
 app.use(`/${BASE_PREFIX}/products`, productsRoutes);
 app.use(`/${BASE_PREFIX}/carts`, cartsRoutes);
 
+const server = app.listen(PORT, () => console.log(`Listening on ${PORT}`));
+const io = new Server(server);
 
-app.listen(PORT, () => {
-  console.log(`API RUNNING EN EL PORT: ${PORT}`);
+io.on("connection", (socket) => {
+  console.log("Socket connected");
+
+  // message channel
+  socket.on("listProducts",async () => {
+    const data= await ProductControllers.getProductSocket();
+    io.emit("products", data);
+  });
+
 });
+
+
+/*app.listen(PORT, () => {
+  console.log(`API RUNNING EN EL PORT: ${PORT}`);
+});*/
