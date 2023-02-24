@@ -41,7 +41,13 @@ io.on("connection", (socket) => {
     io.emit("products", data);
   });
 
+  io.emit("messageAll", async () => {
+    const data= await ProductControllers.getProductSocket();
+    io.emit("products", data);
+  });
+
 });
+
 
 
 /*app.listen(PORT, () => {
