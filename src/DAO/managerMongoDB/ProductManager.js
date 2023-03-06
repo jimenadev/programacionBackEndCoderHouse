@@ -19,7 +19,7 @@ class ProductManager{
 
             const newProduct = {status:true, ...product};
 
-            productModel.insertMany(newProduct);
+            productModel.create(newProduct);
 
             return {status:200, ok:true, message:"The new product was added"};
             

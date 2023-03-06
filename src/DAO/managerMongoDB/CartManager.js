@@ -5,10 +5,10 @@ class CartManager{
 
     addCart = async (products) =>{
         try {
-                       
+
              const newCart = {...products};
 
-             await cartModel.insertMany(newCart) ;
+             await cartModel.create(newCart) ;
  
              return {status:200, ok:true, message:"The new cart was added"};
              
