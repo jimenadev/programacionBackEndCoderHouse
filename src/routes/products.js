@@ -1,15 +1,27 @@
 const { Router } = require("express");
+
 const { uploader } = require("../middlewares/upload");
 const middlewareProducts = require("../middlewares/products");
 const ProductControllers = require("../controllers/products");
 
-const router = Router();
+class ProductsRoutes {
+  path = "/products";
+  router = Router();
 
-router.get("/",ProductControllers.getProduct);  
-router.get(`/:pid`,middlewareProducts.mdlGetProductById, ProductControllers.getProductById);
-router.post(`/`,middlewareProducts.mdlAddProduct, uploader.array("thumbnails"), ProductControllers.postAddProduct);
-router.put(`/:pid`,middlewareProducts.mdlUpdateProduct, ProductControllers.putUpdateProduct);
-router.delete(`/:pid`,middlewareProducts.mdlDeleteProduct, ProductControllers.deleteProduct);
+  constructor(){
+    this.initProductsRoutes();
+  }
 
-module.exports = router;
-  
+  initProductsRoutes(){
+    this.router.post(`${this.path}`,middlewareProducts.mdlAddProduct, uploader.array("thumbnails"), ProductControllers.postAddProduct);
+    this.router.get(`${this.path}`,ProductControllers.getProduct); 
+    this.router.get(`${this.path}/:pid`,middlewareProducts.mdlGetProductById, ProductControllers.getProductById); 
+    this.router.delete(`${this.path}/:pid`,middlewareProducts.mdlDeleteProduct, ProductControllers.deleteProduct);
+    this.router.put(`${this.path}/:pid`,middlewareProducts.mdlUpdateProduct, ProductControllers.putUpdateProduct);
+  }
+
+
+
+}
+
+module.exports = ProductsRoutes;

@@ -1,12 +1,22 @@
-const ProductManager = require("../domain/ProductManager");
-const path = require("path");
+const ProductManager = require("../DAO/managerMongoDB/ProductManager");
+const productManager = new ProductManager.ProductManager();
+postAddProduct = async (req,res) =>{
+
+  const product = req.body;
+  const {status,ok, message} = await productManager.addProduct(product);
+
+  return res.status(status).json({
+    status,
+    ok,
+    message
+  });
+
+}
+
 
 getProduct = async (req,res) =>{
 
     const limit = req.query.limit;
-    
-    const directory = path.join(`${__dirname}/../BD/products.json`);
-    const productManager = new ProductManager.ProductManager(directory);
 
     try {
         if (limit === undefined){
@@ -52,14 +62,10 @@ getProduct = async (req,res) =>{
 getProductById = async (req, res) => {
     const pid = req.params.pid;
   
-    const directory = path.join(`${__dirname}/../BD/products.json`);
-    const productManager = new ProductManager.ProductManager(directory);
-  
     try{
-      const id = Number(pid);
-  
-      const product = await productManager.getProductById(id);
-  
+      
+      const product = await productManager.getProductById(pid);
+
       return res.status(200).json({
           ok: true,
           message: `Producto`,
@@ -75,26 +81,11 @@ getProductById = async (req, res) => {
     
 } 
 
-postAddProduct = async (req,res) =>{
-    const product = req.body;
-    const directory = path.join(`${__dirname}/../BD/products.json`);
-    const productManager = new ProductManager.ProductManager(directory);
-    const {status,ok, message} = await productManager.addProduct(product);
-
-    return res.status(status).json({
-      status,
-      ok,
-      message
-    });
-
-}
 
 putUpdateProduct = async (req, res) => {
     const  id  = req.params.pid;
     const product = req.body;
-    const directory = path.join(`${__dirname}/../BD/products.json`);
-    const productManager = new ProductManager.ProductManager(directory);
-    const {status,ok, message}  = await productManager.updateProduct(Number(id),product);
+    const {status,ok, message}  = await productManager.updateProduct(id,product);
 
     return res.status(status).json({
       status,
@@ -105,14 +96,11 @@ putUpdateProduct = async (req, res) => {
 
 }
 
+
 deleteProduct = async (req, res) => {
     const pid = req.params.pid;
 
-    const id = Number(pid);
-  
-    const directory = path.join(`${__dirname}/../BD/products.json`);
-    const productManager = new ProductManager.ProductManager(directory);
-    const {status,ok, message}  = await productManager.deleteProduct(id);
+    const {status,ok, message}  = await productManager.deleteProduct(pid);
 
     return res.status(status).json({
       status,
@@ -126,9 +114,9 @@ deleteProduct = async (req, res) => {
 
 
 module.exports ={
+    postAddProduct,
     getProduct,
     getProductById,
-    postAddProduct,
-    putUpdateProduct,
-    deleteProduct
+    deleteProduct,
+    putUpdateProduct
 }

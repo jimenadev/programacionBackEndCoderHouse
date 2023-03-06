@@ -139,13 +139,6 @@ mdlGetProductById = (req,res,next) =>{
           });
     }
 
-    if (isNaN(pid)) {
-        return res.status(400).json({
-          ok: false,
-          message: `The id is an invalid value (${pid})`,
-        });
-    }
-
     next();
 }
 
@@ -158,14 +151,6 @@ mdlUpdateProduct = (req,res,next) =>{
             ok: false,
             message: "properties id is required"
           });
-    }
-
-
-    if (isNaN(pid)) {
-        return res.status(400).json({
-          ok: false,
-          message: `The pid is an invalid value (${pid})`,
-        });
     }
 
 
@@ -274,12 +259,6 @@ mdlDeleteProduct = (req,res,next) =>{
           });
     }
 
-    if (isNaN(pid)) {
-        return res.status(400).json({
-          ok: false,
-          message: `The id is an invalid value (${pid})`,
-        });
-    }
 
     next();
 }
