@@ -43,13 +43,6 @@ mdlGetCartById = (req,res,next) =>{
           });
     }
 
-    if (isNaN(cid)) {
-        return res.status(400).json({
-          ok: false,
-          message: `The cid is an invalid value (${cid})`,
-        });
-    }
-
     next();
 }
 
@@ -76,21 +69,7 @@ mdlProductInCart = (req,res,next) =>{
     }
 
 
-    if (isNaN(cid)) {
-        return res.status(400).json({
-          ok: false,
-          message: `The cid is an invalid value (${cid})`,
-        });
-    }
-
-    if (isNaN(pid)) {
-        return res.status(400).json({
-          ok: false,
-          message: `The pid is an invalid value (${pid})`,
-        });
-    }
-
-    if(product !== Number(pid)){
+    if(product !== pid){
         return res.status(400).json({
             ok: false,
             message: `The pid is not equal id product (in body) (${pid})`,

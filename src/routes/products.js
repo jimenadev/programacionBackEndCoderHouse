@@ -20,8 +20,6 @@ class ProductsRoutes {
     this.router.put(`${this.path}/:pid`,middlewareProducts.mdlUpdateProduct, ProductControllers.putUpdateProduct);
   }
 
-
-
 }
 
 module.exports = ProductsRoutes;

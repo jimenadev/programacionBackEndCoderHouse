@@ -1,5 +1,6 @@
 const ProductManager = require("../DAO/managerMongoDB/ProductManager");
 const productManager = new ProductManager.ProductManager();
+
 postAddProduct = async (req,res) =>{
 
   const product = req.body;

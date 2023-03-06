@@ -1,5 +1,8 @@
 const { Router } = require("express");
 
+const middlewareCarts = require("../middlewares/carts");
+const CartsControllers = require("../controllers/carts");
+
 class CartsRoutes {
   path = "/carts";
   router = Router();
@@ -10,30 +13,13 @@ class CartsRoutes {
 
   initCartsRoutes(){
 
-    this.router.get(`${this.path}`, async(req, res) =>{
-
-    });
-
-    
+    this.router.post(`${this.path}`,middlewareCarts.mdlAddCart, CartsControllers.postAddCart);
+    this.router.post(`${this.path}/:cid/product/:pid`,middlewareCarts.mdlProductInCart, CartsControllers.postProductInCart);  
+    this.router.get(`${this.path}/:cid`,middlewareCarts.mdlGetCartById, CartsControllers.getCartById);
+    this.router.get(`${this.path}`, CartsControllers.getCarts);
 
   }
 }
 
 module.exports = CartsRoutes;
-
-
-/*const { Router } = require("express");
-
-const middlewareCarts = require("../middlewares/carts");
-const CartsControllers = require("../controllers/carts");
-
-const router = Router();
-
-router.post(`/`,middlewareCarts.mdlAddCart, CartsControllers.postAddCart);
-router.post("/:cid/product/:pid",middlewareCarts.mdlProductInCart, CartsControllers.postProductInCart);  
-router.get(`/:cid`,middlewareCarts.mdlGetCartById, CartsControllers.getCartById);
-router.get(`/`, CartsControllers.getCarts);
-
-module.exports = router;
-*/
 

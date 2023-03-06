@@ -1,32 +1,35 @@
-const CartManager = require("../domain/CartManager");
-const path = require("path");
-
+const CartManager = require("../DAO/managerMongoDB/CartManager");
+const cartManager = new CartManager.CartManager();
 
 
 postAddCart = async (req,res) =>{
-    const products = req.body;
-    const directory = path.join(`${__dirname}/../BD/carts.json`);
-    const cartManager = new CartManager.CartManager(directory);
-    const {status,ok, message} = await cartManager.addCart(products);
 
-    return res.status(status).json({
-      status,
-      ok,
-      message
-    });
+  try{
+      const products = req.body;
 
-}
+      const {status,ok, message} = await cartManager.addCart(products);
 
+      return res.status(status).json({
+        status,
+        ok,
+        message
+      });
+    }catch{
+      return res.status(500).json({
+        ok: false,
+        message: `Error processing the information`,
+      });
+    }
+  }
+  
+
+  
 getCartById = async (req, res) => {
     const cid = req.params.cid;
   
-    const directory = path.join(`${__dirname}/../BD/carts.json`);
-    const cartManager = new CartManager.CartManager(directory);
-  
     try{
-      let cart_id = Number(cid);
   
-      const cart = await cartManager.getCartById(cart_id);
+      const cart = await cartManager.getCartById(cid);
 
       if(cart.status === 400){
           return res.status(cart.status).json({
@@ -56,14 +59,8 @@ postProductInCart = async (req, res) =>{
     const product = req.body;
 
     try{
-      const directory = path.join(`${__dirname}/../BD/carts.json`);
-      const cartManager = new CartManager.CartManager(directory);
-    
-   
-      let cart_id = Number(cid);
-      let product_id = Number(pid);
   
-      const cart = await cartManager.addProductInCart(cart_id, product_id,product);
+      const cart = await cartManager.addProductInCart(cid, pid,product);
   
       return res.status(200).json({
           ok: true,
@@ -80,9 +77,6 @@ postProductInCart = async (req, res) =>{
 }
 
 getCarts = async (req,res) =>{
-  
-  const directory = path.join(`${__dirname}/../BD/carts.json`);
-  const cartManager = new CartManager.CartManager(directory);
 
   try {
 

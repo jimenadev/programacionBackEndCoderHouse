@@ -7,7 +7,7 @@ const ViewsRoutes = require("./routes/views");
 const app = new App([
   new BaseRoute(),
   new ProductsRoutes(),
- // new CartsRoutes(),
+  new CartsRoutes(),
  // new ViewsRoutes(),
 ]);
 

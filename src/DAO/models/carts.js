@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const cartsCollection = 'Carts';
+const cartsCollection = 'carts';
 
 const cartsSchema = new mongoose.Schema({
     products:{
@@ -8,4 +8,21 @@ const cartsSchema = new mongoose.Schema({
         default:[],
     }
 });
+
+
+
+cartsSchema.method('toJSON', function(){
+    const {_id, ...object} = this.toObject();
+    object.cid=_id
+    return object;
+});
+
+
+const cartModel = mongoose.model(cartsCollection, cartsSchema);
+
+module.exports = {
+    cartModel
+}
+
+
 
