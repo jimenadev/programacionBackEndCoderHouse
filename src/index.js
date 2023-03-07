@@ -8,7 +8,8 @@ const app = new App([
   new BaseRoute(),
   new ProductsRoutes(),
   new CartsRoutes(),
- // new ViewsRoutes(),
+  new ViewsRoutes()
 ]);
 
-app.listen();
+const server = app.listen();
+app.initSocket(server);

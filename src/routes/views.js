@@ -9,17 +9,14 @@ class ViewsRoutes {
   }
 
   initViewsRoutes() {
-    this.router.get(`${this.path}/products`, async (req, res) => {
-      let products = [
-        { name: "prueba", lastName: "apellidoPrueba", dni: "12345678" },
-      ];
-      res.render("products", { products });
+    this.router.get(`/chat`, async (req, res) => {
+      res.render("chat");
     });
 
-    this.router.get(`${this.path}/carts`, async (req, res) => {
+   /* this.router.get(`${this.path}/carts`, async (req, res) => {
       let carts = [];
       res.render("carts", { carts });
-    });
+    });*/
   }
 }
 

@@ -2,10 +2,13 @@ const express = require("express");
 const cors = require("cors");
 const displayRoutes = require("express-routemap");
 const handlebars = require("express-handlebars");
+const { Server } = require("socket.io");
 
 const corsConfig = require("./config/cors.config");
 const { mongoDBconnection } = require("./db/mongo.config");
 const { PORT, NODE_ENV } = require('./config/config');
+
+const {addMessage} = require('./controllers/messages')
 
 const API_VERSION = "v1";
 
@@ -24,6 +27,7 @@ class App {
     this.initializeMiddlewares();
     this.initializeRoutes(routes);
     this.initHandlebars();
+    this.initSocket();
   }
 
   /**
@@ -51,7 +55,7 @@ class App {
     this.app.use(cors(corsConfig));
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
-    this.app.use("/static", express.static(`${__dirname}/public`));
+    this.app.use(express.static(`${__dirname}/public`));
   }
 
   /**
@@ -59,7 +63,7 @@ class App {
    */
   initializeRoutes(routes) {
     routes.forEach((route) => {
-      this.app.use(`/api/${API_VERSION}`, route.router);
+      this.app.use(`/`, route.router);
     });
   }
 
@@ -67,7 +71,7 @@ class App {
    * listen
    */
   listen() {
-    this.app.listen(this.port, () => {
+   return this.app.listen(this.port, () => {
       displayRoutes(this.app);
       console.log(`=================================`);
       console.log(`======= ENV: ${this.env} =======`);
@@ -80,6 +84,29 @@ class App {
     this.app.engine("handlebars", handlebars.engine());
     this.app.set("views", __dirname + "/views");
     this.app.set("view engine", "handlebars");
+  }
+
+  initSocket(server){
+    const io = new Server(server);
+    const messages = [];
+      io.on("connection", (socket) => {
+        console.log("Socket connected");
+
+        // message channel
+        socket.on("message", (data) => {
+          console.log("🚀 ~ file: app.js:35 ~ socket.on ~ data", data);
+          addMessage(data);
+          messages.push(data);
+          console.log("🚀 ~ file: app.js:37 ~ socket.on ~ messages", messages);
+          io.emit("messageLogs", messages);
+        });
+
+        // authenticated channel
+        socket.on("authenticated", (data) => {
+          console.log("🚀 ~ file: app.js:39 ~ socket.on ~ data", data);
+          socket.broadcast.emit("newUserConnected", data);
+        });
+      });
   }
 }
 
